@@ -100,16 +100,31 @@ class FavoriteController extends Controller
         $user = auth()->user();
 
         $allFavorite = Favorite::where("id_usuario", "=", $user->id)->get();
+        
+        $characters = array();
 
-        //$result = HTTP::get('https://rickandmortyapi.com/api/character/' . $personaje);
-        //$character = $result->json();
+        if (isset($allFavorite)) {
+            foreach($allFavorite as $value){              
 
-        return response()->json([
-            "status" => 1,
-            "msg" => "Este personaje ya es favorito",
-            'allFavorite' => $allFavorite,
-            //'character' => $character
-        ],200);
+                $personaje = $value['ref_api'];
+
+                $result = HTTP::get('https://rickandmortyapi.com/api/character/' . $personaje);
+                $character = $result->json();
+
+                array_push($characters, $character);
+            };
+
+            return response()->json([
+                "status" => 1,
+                "msg" => "Estos son tus personaje favorito",
+                'characters' => $characters
+            ],200);
+        }else{
+            return response()->json([
+                "status" => 0,
+                "msg" => "No tienes personaje favorito",
+            ],200);
+        };
     }
 
     /**
@@ -123,7 +138,7 @@ class FavoriteController extends Controller
         $validateData = $request->validate([
             'id' => 'string',
         ]);
-        
+
         $personaje = $validateData['id'];
         
         $result = HTTP::get('https://rickandmortyapi.com/api/character/' . $personaje);
