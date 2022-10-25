@@ -95,14 +95,14 @@ class AuthController extends Controller
 
             return response()->json([
                 "status" => 1,
-                "msg" => "Mostrando Usuario ",
+                "msg" => "Usuario Actualizado ",
                 "user" => $userData,
             ],201);
 
         }else{
             return response()->json([
                 "status" => 0,
-                "msg" => "Usuario no registrado",
+                "msg" => "Usuario no actulizado",
             ],400);  
         }
       
